@@ -956,16 +956,16 @@ public final class Checker implements Visitor {
     public Object visitNothingCommand(NothingCommand ast, Object o) {
         return null;
     }
-
+     //Visitar la exp, verificar que sea de tipo bool
     public Object visitLoopWhileCommand(LoopWhileCommand ast, Object o) {
-        
+      
         TypeDenoter eType = (TypeDenoter) ast.E.visit(this, null);
         if (! eType.equals(StdEnvironment.booleanType))
             reporter.reportError("Boolean expression expected here", "", ast.E.position);
-        ast.C.visit(this, null);
+        ast.C.visit(this, null); //No se si con solo esto es suficiente
         return null;
     }
-
+    //Es lo mismo 
     public Object visitLoopUntilCommand(LoopUntilCommand ast, Object o) {
         TypeDenoter eType = (TypeDenoter) ast.E.visit(this, null);
         if (! eType.equals(StdEnvironment.booleanType))
@@ -973,16 +973,17 @@ public final class Checker implements Visitor {
         ast.C.visit(this, null);
         return null;
     }
-
+    //Ahora primero se visita el comando luego exp
+    //Se comprueba que la exp sea bool
     public Object visitLoopDoWhileCommand(LoopDoWhileCommand ast, Object o) {
-        ast.C.visit(this, null);
+        ast.C.visit(this, null);// No se si es suficiente
         TypeDenoter eType = (TypeDenoter) ast.E.visit(this, null);
         if (! eType.equals(StdEnvironment.booleanType))
             reporter.reportError("Boolean expression expected here", "", ast.E.position);
         return null;
     }
 
-    
+    //Lo mismo que el de arriba
     public Object visitLoopDoUntilCommand(LoopDoUntilCommand ast, Object o) {
         ast.C.visit(this, null);
         TypeDenoter eType = (TypeDenoter) ast.E.visit(this, null);
