@@ -992,9 +992,28 @@ public final class Checker implements Visitor {
         return null;
     }
 
-    @Override
+    
     public Object visitLoopForCommand(LoopForCommand ast, Object o) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        TypeDenoter e1Type = (TypeDenoter) ast.E1.visit(this, null);
+        TypeDenoter e2Type = (TypeDenoter) ast.E2.visit(this, null);
+        Declaration control = (Declaration) ast.I.visit(this, null);
+        //Las 2 espresiones deben ser Integer, separados para dar las diferentes posiciones
+        if (! e1Type.equals(StdEnvironment.integerType))
+            reporter.reportError("Integer expression expected here", "", ast.E1.position);        
+        if (! e2Type.equals(StdEnvironment.integerType))
+            reporter.reportError("Integer expression expected here", "", ast.E2.position); 
+        //Variable id (control)
+        System.out.println(ast.I.spelling);
+        System.out.println(ast.I.decl);
+        System.out.println(control.getClass());
+        if (control == null)
+          reportUndeclared(ast.I);  
+        if (! ast.I.type.equals(StdEnvironment.integerType))
+            reporter.reportError("Integer declaration expected here", "", ast.E2.position); 
+        else
+            reporter.reportError("La puta", "", ast.E2.position); 
+        ast.C.visit(this, null);
+        return null;
     }
 
     @Override
