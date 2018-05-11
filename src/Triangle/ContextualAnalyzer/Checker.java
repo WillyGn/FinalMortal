@@ -958,7 +958,6 @@ public final class Checker implements Visitor {
     }
      //Visitar la exp, verificar que sea de tipo bool
     public Object visitLoopWhileCommand(LoopWhileCommand ast, Object o) {
-      
         TypeDenoter eType = (TypeDenoter) ast.E.visit(this, null);
         if (! eType.equals(StdEnvironment.booleanType))
             reporter.reportError("Boolean expression expected here", "", ast.E.position);
@@ -1036,9 +1035,15 @@ public final class Checker implements Visitor {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
-    @Override
     public Object visitElsifCommand(ElsifCommand ast, Object o) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        TypeDenoter eType = (TypeDenoter) ast.E.visit(this, null);
+        //La expresion debe ser de tipo Bool
+        if (! eType.equals(StdEnvironment.booleanType))
+            reporter.reportError("Integer expression expected here", "", ast.E.position);        
+        ast.C1.visit(this, null);
+        ast.C2.visit(this, null);
+        return null;
+
     }
 
 }
