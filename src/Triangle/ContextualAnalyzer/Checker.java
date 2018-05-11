@@ -1039,7 +1039,7 @@ public final class Checker implements Visitor {
         TypeDenoter eType = (TypeDenoter) ast.E.visit(this, null);
         //La expresion debe ser de tipo Bool
         if (! eType.equals(StdEnvironment.booleanType))
-            reporter.reportError("Integer expression expected here", "", ast.E.position);        
+            reporter.reportError("Boolean expression expected here", "", ast.E.position);        
         ast.C1.visit(this, null);
         ast.C2.visit(this, null);
         return null;
