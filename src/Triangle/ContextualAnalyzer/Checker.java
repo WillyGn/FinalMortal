@@ -992,6 +992,7 @@ public final class Checker implements Visitor {
 
     
     public Object visitLoopForCommand(LoopForCommand ast, Object o) {
+        //comnenteae
         Declaration control = (Declaration) ast.I.visit(this, null);
         VarDeclaration id = new VarDeclaration(ast.I, StdEnvironment.integerType, ast.I.position);
         idTable.openScope();
