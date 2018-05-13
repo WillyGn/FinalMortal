@@ -360,7 +360,6 @@ public final class Checker implements Visitor {
     if (ast.duplicated)
       reporter.reportError ("identifier \"%\" already declared",
                             ast.I.spelling, ast.position);
-
     return null;
   }
 
@@ -993,25 +992,21 @@ public final class Checker implements Visitor {
 
     
     public Object visitLoopForCommand(LoopForCommand ast, Object o) {
+        Declaration control = (Declaration) ast.I.visit(this, null);
+        VarDeclaration id = new VarDeclaration(ast.I, StdEnvironment.integerType, ast.I.position);
+        idTable.openScope();
+        idTable.enter(ast.I.spelling, id);
+        idTable.closeScope();
         TypeDenoter e1Type = (TypeDenoter) ast.E1.visit(this, null);
         TypeDenoter e2Type = (TypeDenoter) ast.E2.visit(this, null);
-        Declaration control = (Declaration) ast.I.visit(this, null);
         //Las 2 espresiones deben ser Integer, separados para dar las diferentes posiciones
         if (! e1Type.equals(StdEnvironment.integerType))
             reporter.reportError("Integer expression expected here", "", ast.E1.position);        
         if (! e2Type.equals(StdEnvironment.integerType))
             reporter.reportError("Integer expression expected here", "", ast.E2.position); 
-        //Variable id (control)
-        System.out.println(ast.I.spelling);
-        System.out.println(ast.I.decl);
-        System.out.println(control.getClass());
-        if (control == null)
-          reportUndeclared(ast.I);  
-        if (! ast.I.type.equals(StdEnvironment.integerType))
-            reporter.reportError("Integer declaration expected here", "", ast.E2.position); 
-        else
-            reporter.reportError("La puta", "", ast.E2.position); 
         ast.C.visit(this, null);
+        
+        
         return null;
     }
 
@@ -1020,7 +1015,6 @@ public final class Checker implements Visitor {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
-    @Override
     public Object visitPrivateDeclaration(PrivateDeclaration ast, Object o) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
@@ -1030,9 +1024,13 @@ public final class Checker implements Visitor {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
-    @Override
     public Object visitVarInitialization(VarInitialization ast, Object o) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        TypeDenoter eType = (TypeDenoter) ast.E.visit(this, null);
+        idTable.enter(ast.I.spelling, ast);
+        if (ast.duplicated)
+          reporter.reportError ("identifier \"%\" already declared",
+                                ast.I.spelling, ast.position);
+        return null;
     }
 
     public Object visitElsifCommand(ElsifCommand ast, Object o) {
